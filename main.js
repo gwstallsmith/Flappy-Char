@@ -16,7 +16,7 @@ function draw() {
     frameRate(30)
 
 
-    text('a', 10, 10)
+    text('a', 10, 10);
 
 
 }
