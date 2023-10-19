@@ -5,34 +5,63 @@ let FRAME_RATE = 60;
 
 //let upVector = createVector(0, 100);
 
-class Bird {
+
+class GameManager {
+    constructor() { 
+        this.gameObjects = []; 
+    }
+
+    static Priority = {
+        LOW: 1,
+        MEDIUM: 2,
+        HIGH: 3
+    }
+
+    queue(gameObject)   { 
+        this.gameObjects.push(gameObject);
+        this.changed = true;
+    }
+
+}
+
+class GameObject {
+    constructor (x, y) {
+        this.position = new p5.Vector(x, y);
+        this.collider = false;
+        this.priority = GameManager.Priority.LOW;
+
+    }
+}
+
+class Bird extends GameObject{
     constructor() {
-        this.y_ = CANVAS_HEIGHT/2
-        this.x_ = CANVAS_WIDTH
+        super()
+        this.position = createVector(CANVAS_WIDTH / 4, CANVAS_HEIGHT / 2); 
 
         this.char_ = '@'
     }
 
 
-    drawBird() {
-        text(this.char_, this.x_, this.y_);
-    }
-
-    flap() {
-        if(this.y_ > 0) {
-            this.y_ -= 100
+    update() {
+        velocity.add(gravity); // Add gravity to the velocity.
+        this.position.add(velocity); // Update bird's position based on velocity.
+    
+        if (this.position.y > CANVAS_HEIGHT) {
+          this.position.y = CANVAS_HEIGHT; // Keep the bird within the canvas.
+          velocity.mult(0); // Reset velocity when it hits the ground.
         }
-    }
-
-    gravity(gravity = 5) {
-        if(this.y_ < CANVAS_HEIGHT) {
-            this.y_ -= gravity;
-        }
-    }
+      }
+    
+      display() {
+        stroke('black');
+        text(this.char_, this.position.x, this.position.y);
+      }
+    
+      flap() {
+        velocity.y = -5; // Give the bird an upward velocity to simulate a flap.
+      }
 
 }
-
-
 
 
 
@@ -47,13 +76,12 @@ function setup() {
 
     bird = new Bird();
 
-
-
-    canvas.mouseClicked(bird.flap())
     
 }
 
 function preload() {
+    gravity = createVector(0, 0.2); // Define gravity as a vector.
+    velocity = createVector(0, 0); // Initialize velocity vector.
 }
 
 function keyPressed() {
@@ -62,15 +90,22 @@ function keyPressed() {
     }
 }
 
+ 
+function mouseReleased() {
+    bird.flap()
+}
+  
 
 function draw() {
     frameRate(FRAME_RATE)
     background('white')
     stroke('black')
 
-    bird.drawBird();
+    bird.display();
     
-    bird.gravity();
+    bird.update();
+
+
 }
 
 function main() {
