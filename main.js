@@ -1,5 +1,5 @@
-let CANVAS_HEIGHT = window.innerHeight * 19/20
-let CANVAS_WIDTH = window.innerWidth * 19/20
+let CANVAS_HEIGHT = window.innerHeight * 19/20 > 1000 ? 1000 : window.innerHeight * 19/20 
+let CANVAS_WIDTH = window.innerWidth * 19/20 > 500 ? 500 : window.innerWidth * 19/20
 
 let FRAME_RATE = 60;
 
@@ -29,14 +29,13 @@ class GameObject {
         this.position = new p5.Vector(x, y);
         this.collider = false;
         this.priority = GameManager.Priority.LOW;
-
     }
 }
 
 class Bird extends GameObject{
     constructor() {
         super()
-        this.position = createVector(CANVAS_WIDTH / 4, CANVAS_HEIGHT / 2); 
+        this.position = createVector(CANVAS_WIDTH / 6, CANVAS_HEIGHT / 2); 
 
         this.char_ = '@'
     }
