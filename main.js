@@ -1,7 +1,14 @@
-let CANVAS_HEIGHT = window.innerHeight * 19/20 > 1000 ? 1000 : window.innerHeight * 19/20 
-let CANVAS_WIDTH = window.innerWidth * 19/20 > 500 ? 500 : window.innerWidth * 19/20
+const CANVAS_HEIGHT = window.innerHeight * 19/20 > 1000 ? 1000 : window.innerHeight * 19/20 
+const CANVAS_WIDTH = window.innerWidth * 19/20 > 500 ? 500 : window.innerWidth * 19/20
 
-let FRAME_RATE = 60;
+const FONT_SIZE = 28;
+
+const FRAME_RATE = 60;
+
+// PC == Pipe Chars
+const PC = [' ', '┃', '━', '┏', '┓', '└', '┘']
+
+
 
 class GameManager {
     constructor() { 
@@ -27,7 +34,7 @@ class Pipe extends GameObject {
         super()
         this.position = createVector(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2)
 
-        this.char_ = '|'
+        this.char_ = PC[3] + PC[2] + PC[4] + '\n' + PC[1] + PC[0] + PC[0] + PC[1] + '\n' + PC[1] + PC[0] + PC[0]  + PC[1]
     }
 
     update() {
@@ -87,7 +94,8 @@ function setup() {
     canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
     canvas.parent('p5')
 
-    textSize(32)
+    textSize(FONT_SIZE)
+    textLeading(FONT_SIZE);
 
     GameMan = new GameManager()
     bird = new Bird()
