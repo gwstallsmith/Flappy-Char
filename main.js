@@ -1,12 +1,12 @@
 const CANVAS_HEIGHT = window.innerHeight * 19/20 > 1000 ? 1000 : window.innerHeight * 19/20
 const CANVAS_WIDTH = window.innerWidth * 19/20 > 500 ? 500 : window.innerWidth * 19/20
 
-const FONT_SIZE = 28;
+const FONT_SIZE = 32;
 
 const FRAME_RATE = 60;
 
 // PC == Pipe Chars
-const PC = [' ', '┃', '━', '┏', '┓', '┗', '┛', '/']
+const PC = [' ', '┃', '━', '┏', '┓', '┗', '┛', '/']
 
 
 class GameManager {
@@ -25,11 +25,11 @@ class GameObject {
     }
 
     static PipeParts = {
-        TOP: PC[3] + PC[2] + PC[2] + PC[4] + '\n',
-        BOTTOM: PC[5] + PC[2] + PC[2] + PC[6] + '\n',
-        SIDE: PC[1] + PC[0] + PC[0] + PC[0] + PC[0] + PC[1] + '\n',
+        TOP: PC[3] + PC[2] + PC[2] + PC[2] + PC[2] + PC[2] + PC[4] + '\n',
+        BOTTOM: PC[5] + PC[2] + PC[2] + PC[2]+ PC[2] + PC[2] + PC[6] + '\n',
+        SIDE: PC[1] + PC[0] + PC[0] + PC[0] + PC[1] + '\n',
         AIR: '\n',
-        GAP: 3 
+        GAP: 2.5 
     }
 
     update() {
@@ -78,7 +78,7 @@ class Pipe extends GameObject {
     update() {
         this.position_.add(pipeVelocity) // Update bird's position based on velocity.
     
-        if (this.position_.x < -100) {
+        if (this.position_.x + GameObject.PipeParts.GAP*FONT_SIZE < -FONT_SIZE) {
           this.position_.x = CANVAS_WIDTH // Keep the bird within the canvas.
           this.rebuildPipe()
         }
@@ -161,7 +161,7 @@ function setup() {
 function preload() {
     gravity = createVector(0, 0.2); // Define gravity as a vector.
     birdVelocity = createVector(0, 0); // Initialize velocity vector.
-    pipeVelocity = createVector(-2, 0);
+    pipeVelocity = createVector(-3, 0);
 
 }
 
