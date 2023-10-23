@@ -28,7 +28,8 @@ class GameObject {
         TOP: PC[3] + PC[2] + PC[4] + '\n',
         BOTTOM: PC[5] + PC[2] + PC[6] + '\n',
         SIDE: PC[1] + PC[0] + PC[0] + PC[1] + '\n',
-        AIR: '\n'
+        AIR: '\n',
+        GAP: 3
     }
 
     update() {
@@ -84,17 +85,21 @@ class Pipe extends GameObject {
     }
 
     rebuildPipe() {
-        this.opening_ = Math.ceil(CANVAS_HEIGHT * Math.random())
+        let randOpening = Math.random()
+
+        while(randOpening > 0.8 || randOpening < 0.2) { randOpening = Math.random()}
+
+        this.opening_ = Math.ceil(CANVAS_HEIGHT * randOpening)
         this.char_ = null
 
         for(let i = -FONT_SIZE; i < CANVAS_HEIGHT + FONT_SIZE; i += FONT_SIZE) {
-            if(Math.abs(this.opening_ - i) < 3*FONT_SIZE && this.opening_ - i > 2*FONT_SIZE) {
+            if(Math.abs(this.opening_ - i) < (GameObject.PipeParts.GAP*FONT_SIZE) && (this.opening_ - i) > (GameObject.PipeParts.GAP-1)*FONT_SIZE) {
                 this.char_ += GameObject.PipeParts.BOTTOM
 
-            } else if(Math.abs(this.opening_ - i) < 3*FONT_SIZE && this.opening_ - i < -2*FONT_SIZE){
+            } else if(Math.abs(this.opening_ - i) < (GameObject.PipeParts.GAP*FONT_SIZE) && (this.opening_ - i) < -(GameObject.PipeParts.GAP-1)*FONT_SIZE){
                 this.char_ += GameObject.PipeParts.TOP
 
-            } else if(Math.abs(this.opening_ - i) < 3*FONT_SIZE) {
+            } else if(Math.abs(this.opening_ - i) < (GameObject.PipeParts.GAP*FONT_SIZE)) {
                 this.char_ += GameObject.PipeParts.AIR
 
             } else {
