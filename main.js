@@ -25,9 +25,9 @@ class GameObject {
     }
 
     static PipeParts = {
-        TOP: PC[3] + PC[2] + PC[2] + PC[2] + PC[2] + PC[2] + PC[4] + '\n',
-        BOTTOM: PC[5] + PC[2] + PC[2] + PC[2]+ PC[2] + PC[2] + PC[6] + '\n',
-        SIDE: PC[1] + PC[0] + PC[0] + PC[0] + PC[1] + '\n',
+        TOP: PC[3] + PC[2] + PC[2] + PC[4] + '\n',
+        BOTTOM: PC[5] + PC[2] + PC[2] + PC[6] + '\n',
+        SIDE: PC[1] + PC[0] + PC[0] + PC[1] + '\n',
         AIR: '\n',
         GAP: 2.5 
     }
