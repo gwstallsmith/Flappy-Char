@@ -9,18 +9,4 @@
 
 body {
     background-color:rgb(20,20,20);
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    background-position: center;
-}
-
-main {
-    background-color:rgb(20,20,20);
-    max-width: 920px;
-
-
-
-    color:white;
 }
