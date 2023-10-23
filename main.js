@@ -52,23 +52,20 @@ class Pipe extends GameObject {
         super()
         this.position_ = createVector(CANVAS_WIDTH, -FONT_SIZE)
 
-        this.opening_ = CANVAS_HEIGHT/2//Math.ceil(CANVAS_HEIGHT * Math.random())
+        this.opening_ = Math.ceil(CANVAS_HEIGHT * Math.random())
 
         for(let i = -FONT_SIZE; i < CANVAS_HEIGHT + FONT_SIZE; i += FONT_SIZE) {
+            if(Math.abs(this.opening_ - i) < 3*FONT_SIZE && this.opening_ - i > 2*FONT_SIZE) {
+                this.char_ += GameObject.PipeParts.BOTTOM
 
-            if(Math.abs(this.opening_ - i) < FONT_SIZE) {
-                this.char += GameObject.PipeParts.BOTTOM
-                
-                console.log('BOT', GameObject.PipeParts.BOTTOM)
-                   
+            } else if(Math.abs(this.opening_ - i) < 3*FONT_SIZE && this.opening_ - i < -2*FONT_SIZE){
+                this.char_ += GameObject.PipeParts.TOP
+
             } else if(Math.abs(this.opening_ - i) < 3*FONT_SIZE) {
                 this.char_ += GameObject.PipeParts.AIR
-                console.log('AIR')
-
 
             } else {
                 this.char_ += GameObject.PipeParts.SIDE
-                console.log('SIDE')
 
             }
 
@@ -82,11 +79,31 @@ class Pipe extends GameObject {
     
         if (this.position_.x < -100) {
           this.position_.x = CANVAS_WIDTH // Keep the bird within the canvas.
-          this.opening_ = Math.ceil(CANVAS_HEIGHT * Math.random())
+          this.rebuildPipe()
         }
-      }
+    }
 
+    rebuildPipe() {
+        this.opening_ = Math.ceil(CANVAS_HEIGHT * Math.random())
+        this.char_ = null
 
+        for(let i = -FONT_SIZE; i < CANVAS_HEIGHT + FONT_SIZE; i += FONT_SIZE) {
+            if(Math.abs(this.opening_ - i) < 3*FONT_SIZE && this.opening_ - i > 2*FONT_SIZE) {
+                this.char_ += GameObject.PipeParts.BOTTOM
+
+            } else if(Math.abs(this.opening_ - i) < 3*FONT_SIZE && this.opening_ - i < -2*FONT_SIZE){
+                this.char_ += GameObject.PipeParts.TOP
+
+            } else if(Math.abs(this.opening_ - i) < 3*FONT_SIZE) {
+                this.char_ += GameObject.PipeParts.AIR
+
+            } else {
+                this.char_ += GameObject.PipeParts.SIDE
+
+            }
+        }
+
+    }
 
 
 }
@@ -138,7 +155,7 @@ function setup() {
 function preload() {
     gravity = createVector(0, 0.2); // Define gravity as a vector.
     birdVelocity = createVector(0, 0); // Initialize velocity vector.
-    pipeVelocity = createVector(-1  , 0);
+    pipeVelocity = createVector(-2, 0);
 
 }
 
