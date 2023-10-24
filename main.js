@@ -14,9 +14,13 @@ class GameManager {
         this.score_ = 0;
     }
 
+
+    getPipe() { return this.gameObjects[0] }
+
+    addPoint() { this.score_++ }
+
     enqueue(gameObject)   {
         this.gameObjects.push(gameObject);
-        ++this.score_;
     }
 
     dequeue(gameObject) { 
@@ -87,6 +91,8 @@ class Pipe extends GameObject {
         }
     }
 
+    getPos() { return this.position_ }
+
     display() {
         fill(0,0,0)
         stroke('black')
@@ -102,6 +108,7 @@ class Pipe extends GameObject {
             this.position_.x = CANVAS_WIDTH // pop off pipe stack in manager
             GameMan.dequeue(this)
             GameMan.enqueue(new Pipe)
+            GameMan.addPoint()
         }
     }
 
@@ -122,6 +129,7 @@ class Bird extends GameObject {
         birdVelocity.add(gravity) // Add gravity to the velocity.
         this.position_.add(birdVelocity) // Update bird's position based on velocity.
     
+
         if (this.position_.y > CANVAS_HEIGHT) {
           this.position_.y = CANVAS_HEIGHT // Keep the bird within the canvas.
           birdVelocity.mult(0) // Reset velocity when it hits the ground.
