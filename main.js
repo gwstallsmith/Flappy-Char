@@ -62,12 +62,14 @@ class GameManager {
 
     checkCollision() {
         if((this.gameObjects[0].getPos().x < CANVAS_WIDTH / 6 + FONT_SIZE) && (this.bird_.getPos().y < this.gameObjects[0].pipe_.topHeight || this.bird_.getPos().y > this.gameObjects[0].pipe_.botY)) {
-            this.stop()
+            this.gameOver()
         }
     }
 
     gameOver() {
         this.stop()
+        let TempMan = new GameManager
+        GameMan = TempMan
         
     }
 
