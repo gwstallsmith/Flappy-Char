@@ -1,9 +1,9 @@
 const CANVAS_HEIGHT = window.innerHeight * 19/20 > 1000 ? 1000 : window.innerHeight * 19/20
 const CANVAS_WIDTH = window.innerWidth * 19/20 > 500 ? 500 : window.innerWidth * 19/20
 
-const FONT_SIZE = 28;
+const FONT_SIZE = 32;
 
-const FRAME_RATE = 60;
+const FRAME_RATE = 120;
 
 
 class GameManager {
@@ -11,9 +11,17 @@ class GameManager {
         this.gameObjects = [];
         this.gameObjects.push(new Pipe)
 
+        this.bird_ = new Bird
+
         this.score_ = 0;
+
+        this.playing_ = false;
     }
 
+    start() { this.playing_ = true; }
+    stop() { this.playing_ = false; }
+
+    getBird() { return this.bird_ }
 
     getPipe() { return this.gameObjects[0] }
 
@@ -28,20 +36,39 @@ class GameManager {
     }
 
     render() {
-        this.gameObjects[0].display()
-        this.gameObjects[0].update()
+        if(this.playing_) {
+            this.gameObjects[0].display()
+            this.gameObjects[0].update()
 
-        this.displayScore()
+            this.displayScore()
 
+            this.bird_.display();
+            this.bird_.update();
+            this.checkCollision()
+
+        } else {
+            text("Press space to start\nOr click to start", CANVAS_WIDTH/8, CANVAS_HEIGHT/10)
+            this.bird_.display() 
+            this.gameObjects[0].display()
+
+        }
     }
 
     displayScore() {
-        stroke('white')
-        fill(0,0,0)
-        rect(CANVAS_WIDTH/2 - FONT_SIZE/4, CANVAS_HEIGHT/10 - FONT_SIZE *0.85, FONT_SIZE, FONT_SIZE)
         stroke('black')
-        fill(255,255,255)
+        fill('black')
         text(this.score_, CANVAS_WIDTH/2, CANVAS_HEIGHT/10)
+    }
+
+    checkCollision() {
+        if((this.gameObjects[0].getPos().x < CANVAS_WIDTH / 6 + FONT_SIZE) && (this.bird_.getPos().y < this.gameObjects[0].pipe_.topHeight || this.bird_.getPos().y > this.gameObjects[0].pipe_.botY)) {
+            this.stop()
+        }
+    }
+
+    gameOver() {
+        this.stop()
+        
     }
 
 }
@@ -52,6 +79,7 @@ class GameObject {
         this.collider = false;
     }
 
+    getPos() { return this.position_ }
 
     update() {
         this.position_.add(pipeVelocity)
@@ -83,15 +111,15 @@ class Pipe extends GameObject {
             topY: 0,
             botY: this.opening_ +  4 * FONT_SIZE,
 
-            
-            width:2*FONT_SIZE,
+            width:4*FONT_SIZE,
 
             topHeight: this.opening_,
             botHeight: CANVAS_HEIGHT - this.opening_
         }
+
+        this.newPipe_ = true;
     }
 
-    getPos() { return this.position_ }
 
     display() {
         fill(0,0,0)
@@ -103,11 +131,12 @@ class Pipe extends GameObject {
 
     update() {
         this.position_.add(pipeVelocity)
+
     
         if (this.position_.x < -this.pipe_.width) {
             this.position_.x = CANVAS_WIDTH // pop off pipe stack in manager
-            GameMan.dequeue(this)
             GameMan.enqueue(new Pipe)
+            GameMan.dequeue(this)
             GameMan.addPoint()
         }
     }
@@ -172,12 +201,14 @@ function preload() {
 
 function keyPressed() {
     if(keyCode === 32) {
-        bird.flap()
+        GameMan.start()
+        GameMan.getBird().flap()
     }
 }
 
  
 function mouseReleased() {
+    GameMan.start()
     bird.flap()
 }
   
@@ -189,9 +220,6 @@ function draw() {
 
     GameMan.render();
 
-    bird.display();
-
-    bird.update();
 
 
 }
