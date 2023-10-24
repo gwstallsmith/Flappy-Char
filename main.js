@@ -47,7 +47,9 @@ class GameManager {
             this.checkCollision()
 
         } else {
-            text("Press space to start\nOr click to start", CANVAS_WIDTH/8, CANVAS_HEIGHT/10)
+            textSize(28)
+            text("Press space to start\n\t\tOr tap to start", CANVAS_WIDTH/8, CANVAS_HEIGHT/10)
+            textSize(FONT_SIZE)
             this.bird_.display() 
             this.gameObjects[0].display()
 
@@ -61,7 +63,7 @@ class GameManager {
     }
 
     checkCollision() {
-        if((this.gameObjects[0].getPos().x < CANVAS_WIDTH / 6 + FONT_SIZE) && (this.bird_.getPos().y < this.gameObjects[0].pipe_.topHeight || this.bird_.getPos().y > this.gameObjects[0].pipe_.botY)) {
+        if((this.gameObjects[0].getPos().x < CANVAS_WIDTH / 6 + FONT_SIZE) && (this.bird_.getPos().y - FONT_SIZE/2 < this.gameObjects[0].pipe_.topHeight || this.bird_.getPos().y > this.gameObjects[0].pipe_.botY)) {
             this.gameOver()
         }
     }
@@ -70,7 +72,7 @@ class GameManager {
         this.stop()
         let TempMan = new GameManager
         GameMan = TempMan
-        
+
     }
 
 }
