@@ -1,20 +1,44 @@
 const CANVAS_HEIGHT = window.innerHeight * 19/20 > 1000 ? 1000 : window.innerHeight * 19/20
 const CANVAS_WIDTH = window.innerWidth * 19/20 > 500 ? 500 : window.innerWidth * 19/20
 
-const FONT_SIZE = 32;
+const FONT_SIZE = 28;
 
 const FRAME_RATE = 60;
-
-// PC == Pipe Chars
-const PC = [' ', '┃', '━', '┏', '┓', '┗', '┛', '/']
 
 
 class GameManager {
     constructor() { 
-        this.gameObjects = []; 
+        this.gameObjects = [];
+        this.gameObjects.push(new Pipe)
+
+        this.score_ = 0;
     }
 
+    enqueue(gameObject)   {
+        this.gameObjects.push(gameObject);
+        ++this.score_;
+    }
 
+    dequeue(gameObject) { 
+        this.gameObjects.splice(this.gameObjects.indexOf(gameObject), 1)
+    }
+
+    render() {
+        this.gameObjects[0].display()
+        this.gameObjects[0].update()
+
+        this.displayScore()
+
+    }
+
+    displayScore() {
+        stroke('white')
+        fill(0,0,0)
+        rect(CANVAS_WIDTH/2 - FONT_SIZE/4, CANVAS_HEIGHT/10 - FONT_SIZE *0.85, FONT_SIZE, FONT_SIZE)
+        stroke('black')
+        fill(255,255,255)
+        text(this.score_, CANVAS_WIDTH/2, CANVAS_HEIGHT/10)
+    }
 
 }
 
@@ -24,14 +48,6 @@ class GameObject {
         this.collider = false;
     }
 
-    static PipeParts = {
-        TOP: PC[3] + PC[2] + PC[2] + PC[4] + '\n',
-        BOTTOM: PC[5] + PC[2] + PC[2] + PC[6] + '\n',
-        SIDE: navigator.platform.startsWith('Linux') == true ? PC[1] + PC[0] + ' ' + PC[1] + '\n' : PC[1] + PC[0] + PC[0] + PC[1] + '\n',
-        
-        AIR: '\n',
-        GAP: 2.5 
-    }
 
     update() {
         this.position_.add(pipeVelocity)
@@ -43,9 +59,9 @@ class GameObject {
     
     display() {
         stroke('black');
-        text(this.char_, this.position_.x, this.position_.y)
+        fill('black');
+        text(this.display_, this.position_.x, this.position_.y)
     }
-
 
 }
 
@@ -54,63 +70,41 @@ class Pipe extends GameObject {
         super()
         this.position_ = createVector(CANVAS_WIDTH, -FONT_SIZE)
 
-        this.opening_ = Math.ceil(CANVAS_HEIGHT * Math.random())
+        do {
+            this.opening_ = Math.ceil(CANVAS_HEIGHT * Math.random())
+        } while((this.opening_ < 0.1*CANVAS_HEIGHT || this.opening_ > 0.8*CANVAS_HEIGHT))
 
-        for(let i = -FONT_SIZE; i < CANVAS_HEIGHT + FONT_SIZE; i += FONT_SIZE) {
-            if(Math.abs(this.opening_ - i) < (GameObject.PipeParts.GAP*FONT_SIZE) && (this.opening_ - i) > (GameObject.PipeParts.GAP-1)*FONT_SIZE) {
-                this.char_ += GameObject.PipeParts.BOTTOM
+        this.pipe_ = { 
+            x: this.position_.x,
+            topY: 0,
+            botY: this.opening_ +  4 * FONT_SIZE,
 
-            } else if(Math.abs(this.opening_ - i) < (GameObject.PipeParts.GAP*FONT_SIZE) && (this.opening_ - i) < -(GameObject.PipeParts.GAP-1)*FONT_SIZE){
-                this.char_ += GameObject.PipeParts.TOP
+            
+            width:2*FONT_SIZE,
 
-            } else if(Math.abs(this.opening_ - i) < (GameObject.PipeParts.GAP*FONT_SIZE)) {
-                this.char_ += GameObject.PipeParts.AIR
-
-            } else {
-                this.char_ += GameObject.PipeParts.SIDE
-
-            }
-
-
+            topHeight: this.opening_,
+            botHeight: CANVAS_HEIGHT - this.opening_
         }
+    }
 
+    display() {
+        fill(0,0,0)
+        stroke('black')
+        rect(this.position_.x, this.pipe_.topY, this.pipe_.width, this.pipe_.topHeight)
+        rect(this.position_.x, this.pipe_.botY, this.pipe_.width, this.pipe_.botHeight)
+        
     }
 
     update() {
-        this.position_.add(pipeVelocity) // Update bird's position based on velocity.
+        this.position_.add(pipeVelocity)
     
-        if (this.position_.x + GameObject.PipeParts.GAP*FONT_SIZE < -FONT_SIZE) {
-          this.position_.x = CANVAS_WIDTH // Keep the bird within the canvas.
-          this.rebuildPipe()
+        if (this.position_.x < -this.pipe_.width) {
+            this.position_.x = CANVAS_WIDTH // pop off pipe stack in manager
+            GameMan.dequeue(this)
+            GameMan.enqueue(new Pipe)
         }
     }
 
-    rebuildPipe() {
-
-        do {
-            this.opening_ = Math.ceil(CANVAS_HEIGHT * Math.random())
-        } while((this.opening_ > 0.8*CANVAS_HEIGHT || this.opening_ < 0.2*CANVAS_HEIGHT) && !(this.opening_ % FONT_SIZE == 0))
-
-
-        this.char_ = null
-
-        for(let i = -FONT_SIZE; i < CANVAS_HEIGHT + FONT_SIZE; i += FONT_SIZE) {
-            if(Math.abs(this.opening_ - i) <= (GameObject.PipeParts.GAP*FONT_SIZE) && (this.opening_ - i) > (GameObject.PipeParts.GAP-1)*FONT_SIZE) {
-                this.char_ += GameObject.PipeParts.BOTTOM
-
-            } else if(Math.abs(this.opening_ - i) <= (GameObject.PipeParts.GAP*FONT_SIZE) && (this.opening_ - i) < -(GameObject.PipeParts.GAP-1)*FONT_SIZE){
-                this.char_ += GameObject.PipeParts.TOP
-
-            } else if(Math.abs(this.opening_ - i) <= (GameObject.PipeParts.GAP*FONT_SIZE)) {
-                this.char_ += GameObject.PipeParts.AIR
-
-            } else {
-                this.char_ += GameObject.PipeParts.SIDE
-
-            }
-        }
-
-    }
 
 
 }
@@ -120,7 +114,7 @@ class Bird extends GameObject {
         super()
         this.position_ = createVector(CANVAS_WIDTH / 6, CANVAS_HEIGHT / 2)
 
-        this.char_ = '@'
+        this.display_ = '@'
     }
 
 
@@ -147,6 +141,8 @@ let canvas
 let bird
 let GameMan
 let pipe
+
+
 function setup() {
     canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
     canvas.parent('p5')
@@ -162,7 +158,7 @@ function setup() {
 function preload() {
     gravity = createVector(0, 0.2); // Define gravity as a vector.
     birdVelocity = createVector(0, 0); // Initialize velocity vector.
-    pipeVelocity = createVector(-3, 0);
+    pipeVelocity = createVector(-3.5, 0);
 
 }
 
@@ -183,14 +179,12 @@ function draw() {
     background('white')
     stroke('black')
 
+    GameMan.render();
+
     bird.display();
-    pipe.display();
 
     bird.update();
-    pipe.update();
+
 
 }
 
-function main() {
-    
-}
