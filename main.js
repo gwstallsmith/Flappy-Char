@@ -86,8 +86,8 @@ class GameManager {
 
     gameOver() {
         this.stop()
-        //let TempMan = new GameManager
-        //GameMan = TempMan
+        let TempMan = new GameManager
+        GameMan = TempMan
 
     }
 
