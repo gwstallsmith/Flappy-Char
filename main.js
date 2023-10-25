@@ -40,6 +40,7 @@ class GameManager {
             this.gameObjects[0].display()
             this.gameObjects[0].update()
 
+
             this.displayScore()
 
             this.bird_.display();
@@ -57,14 +58,29 @@ class GameManager {
     }
 
     displayScore() {
+
+
+        let digits = this.score_
+        let accum = 1
+
+        while(digits > 9) {
+            digits = digits % 10;
+            accum++
+        }
         stroke('black')
+        fill('white')
+
+        rect(CANVAS_WIDTH/2 - FONT_SIZE*accum, CANVAS_HEIGHT/10 - FONT_SIZE*7/8, FONT_SIZE*accum*3/2, FONT_SIZE)
         fill('black')
-        text(this.score_, CANVAS_WIDTH/2, CANVAS_HEIGHT/10)
+        text(this.score_, CANVAS_WIDTH/2 - FONT_SIZE/2*accum, CANVAS_HEIGHT/10)
     }
 
     checkCollision() {
-        if((this.gameObjects[0].getPos().x < CANVAS_WIDTH / 6 + FONT_SIZE) && (this.bird_.getPos().y - FONT_SIZE/2 < this.gameObjects[0].pipe_.topHeight || this.bird_.getPos().y > this.gameObjects[0].pipe_.botY)) {
+
+        if((this.gameObjects[0].getPos().x < CANVAS_WIDTH / 6 && !(this.gameObjects[0].getPos().x < CANVAS_WIDTH / 6 - this.gameObjects[0].pipe_.width))
+        && ((this.bird_.getPos().y - FONT_SIZE/2 < this.gameObjects[0].pipe_.topHeight) || (this.bird_.getPos().y - FONT_SIZE/2 > this.gameObjects[0].pipe_.botY))) {
             this.gameOver()
+
         }
     }
 
@@ -164,8 +180,7 @@ class Bird extends GameObject {
     
 
         if (this.position_.y > CANVAS_HEIGHT) {
-          this.position_.y = CANVAS_HEIGHT // Keep the bird within the canvas.
-          birdVelocity.mult(0) // Reset velocity when it hits the ground.
+          GameMan.gameOver()
         }
       }
     
@@ -199,7 +214,7 @@ function setup() {
 function preload() {
     gravity = createVector(0, 0.2); // Define gravity as a vector.
     birdVelocity = createVector(0, 0); // Initialize velocity vector.
-    pipeVelocity = createVector(-3.5, 0);
+    pipeVelocity = createVector(-4, 0);
 
 }
 
