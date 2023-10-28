@@ -3,7 +3,7 @@ const CANVAS_WIDTH = window.innerWidth * 19/20 > 500 ? 500 : window.innerWidth *
 
 const FONT_SIZE = 32;
 
-const FRAME_RATE = 120;
+const FRAME_RATE = 90;
 
 
 class GameManager {
@@ -173,6 +173,17 @@ class Bird extends GameObject {
         this.display_ = '@'
     }
 
+    display() {
+        stroke('black');
+        fill('red')
+        text(this.display_, this.position_.x + FONT_SIZE/20, this.position_.y + FONT_SIZE/20)
+
+        fill('black');
+
+        text(this.display_, this.position_.x, this.position_.y)
+    }
+
+
 
     update() {
         birdVelocity.add(gravity) // Add gravity to the velocity.
@@ -186,7 +197,7 @@ class Bird extends GameObject {
     
     
     flap() {
-        birdVelocity.y = -5 // Give the bird an upward velocity to simulate a flap.
+        birdVelocity.y = -5.5 // Give the bird an upward velocity to simulate a flap.
     }
 
 }
