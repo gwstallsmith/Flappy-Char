@@ -1,9 +1,13 @@
-const CANVAS_HEIGHT = window.innerHeight * 19/20 > 1000 ? 1000 : window.innerHeight * 19/20
+const CANVAS_HEIGHT = window.innerHeight * 19/20 > 800 ? 800 : window.innerHeight * 19/20
 const CANVAS_WIDTH = window.innerWidth * 19/20 > 500 ? 500 : window.innerWidth * 19/20
 
 const FONT_SIZE = 32;
 
 const FRAME_RATE = 90;
+
+
+let colors = [];
+let numColors = 360
 
 
 class GameManager {
@@ -175,12 +179,24 @@ class Bird extends GameObject {
 
     display() {
         stroke('black');
-        fill('red')
+        textSize(FONT_SIZE +1)
+
+        text(this.display_, this.position_.x+ FONT_SIZE/20, this.position_.y+ FONT_SIZE/20)
+
+
+        let currentColor = colors[frameCount % numColors];
+        textSize(FONT_SIZE)
+        fill(currentColor)
         text(this.display_, this.position_.x + FONT_SIZE/20, this.position_.y + FONT_SIZE/20)
 
         fill('black');
+        
+        textSize(FONT_SIZE -1)
 
         text(this.display_, this.position_.x, this.position_.y)
+
+
+
     }
 
 
@@ -214,12 +230,23 @@ function setup() {
     canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
     canvas.parent('p5')
 
+    colorMode(HSB, 360, 100, 100);
+
     textSize(FONT_SIZE)
     textLeading(FONT_SIZE);
 
     GameMan = new GameManager()
     bird = new Bird()
     pipe = new Pipe();
+
+    for (let i = 0; i < numColors; i++) {
+        let hue = map(i, 0, numColors, 0, 360);
+        let saturation = 100;
+        let brightness = 100;
+        colors.push(color(hue, saturation, brightness));
+    }
+
+
 }
 
 function preload() {
@@ -244,6 +271,7 @@ function mouseReleased() {
   
 
 function draw() {
+    noStroke();
     frameRate(FRAME_RATE)
     background('white')
     stroke('black')
