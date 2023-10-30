@@ -1,9 +1,9 @@
 const CANVAS_HEIGHT = window.innerHeight * 19/20 > 800 ? 800 : window.innerHeight * 19/20
-const CANVAS_WIDTH = window.innerWidth * 19/20 > 500 ? 500 : window.innerWidth * 19/20
+const CANVAS_WIDTH = window.innerWidth * 19/20 > 400 ? 400 : window.innerWidth * 19/20
 
 const FONT_SIZE = 32;
 
-const FRAME_RATE = 90;
+const FRAME_RATE = 120;
 
 
 let colors = [];
@@ -21,6 +21,8 @@ class GameManager {
 
         this.playing_ = false;
     }
+
+    getPlaying() { return this.playing_ }
 
     start() { this.playing_ = true; }
     stop() { this.playing_ = false; }
@@ -90,8 +92,6 @@ class GameManager {
 
     gameOver() {
         this.stop()
-        let TempMan = new GameManager
-        GameMan = TempMan
 
     }
 
@@ -258,7 +258,13 @@ function preload() {
 
 function keyPressed() {
     if(keyCode === 32) {
+        if(!GameMan.getPlaying()) {
+            let TempMan = new GameManager
+            GameMan = TempMan    
+        }
+
         GameMan.start()
+
         GameMan.getBird().flap()
     }
 }
