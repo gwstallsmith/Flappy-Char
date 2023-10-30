@@ -271,6 +271,11 @@ function keyPressed() {
 
  
 function mouseReleased() {
+    if(!GameMan.getPlaying()) {
+        let TempMan = new GameManager
+        GameMan = TempMan    
+    }
+
     GameMan.start()
     bird.flap()
 }
