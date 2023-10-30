@@ -213,7 +213,7 @@ class Bird extends GameObject {
     
     
     flap() {
-        birdVelocity.y = -5.5 // Give the bird an upward velocity to simulate a flap.
+        birdVelocity.y = -8 // Give the bird an upward velocity to simulate a flap.
     }
 
 }
@@ -250,7 +250,7 @@ function setup() {
 }
 
 function preload() {
-    gravity = createVector(0, 0.2); // Define gravity as a vector.
+    gravity = createVector(0, 0.5); // Define gravity as a vector.
     birdVelocity = createVector(0, 0); // Initialize velocity vector.
     pipeVelocity = createVector(-4, 0);
 
