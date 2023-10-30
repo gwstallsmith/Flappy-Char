@@ -12,8 +12,8 @@ let numColors = 360
 
 class GameManager {
     constructor() { 
-        this.gameObjects = [];
-        this.gameObjects.push(new Pipe)
+        this.pipes_ = [];
+        this.pipes_.push(new Pipe)
 
         this.bird_ = new Bird
 
@@ -27,22 +27,22 @@ class GameManager {
 
     getBird() { return this.bird_ }
 
-    getPipe() { return this.gameObjects[0] }
+    getPipe() { return this.pipes_[0] }
 
     addPoint() { this.score_++ }
 
-    enqueue(gameObject)   {
-        this.gameObjects.push(gameObject);
+    enqueue(pipe)   {
+        this.pipes_.push(pipe);
     }
 
-    dequeue(gameObject) { 
-        this.gameObjects.splice(this.gameObjects.indexOf(gameObject), 1)
+    dequeue(pipe) { 
+        this.pipes_.splice(this.pipes_.indexOf(pipe), 1)
     }
 
     render() {
         if(this.playing_) {
-            this.gameObjects[0].display()
-            this.gameObjects[0].update()
+            this.pipes_[0].display()
+            this.pipes_[0].update()
 
 
             this.displayScore()
@@ -56,7 +56,7 @@ class GameManager {
             text("Press space to start\n\t\tOr tap to start", CANVAS_WIDTH/8, CANVAS_HEIGHT/10)
             textSize(FONT_SIZE)
             this.bird_.display() 
-            this.gameObjects[0].display()
+            this.pipes_[0].display()
 
         }
     }
@@ -81,8 +81,8 @@ class GameManager {
 
     checkCollision() {
 
-        if(((this.gameObjects[0].getPos().x < CANVAS_WIDTH / 6 + FONT_SIZE) && !(this.gameObjects[0].getPos().x < CANVAS_WIDTH / 6 - this.gameObjects[0].pipe_.width))
-        && ((this.bird_.getPos().y - FONT_SIZE/2 < this.gameObjects[0].pipe_.topHeight) || (this.bird_.getPos().y + FONT_SIZE/8 > this.gameObjects[0].pipe_.botY))) {
+        if(((this.pipes_[0].getPos().x < CANVAS_WIDTH / 6 + FONT_SIZE) && !(this.pipes_[0].getPos().x < CANVAS_WIDTH / 6 - this.pipes_[0].pipe_.width))
+        && ((this.bird_.getPos().y - FONT_SIZE/2 < this.pipes_[0].pipe_.topHeight) || (this.bird_.getPos().y + FONT_SIZE/8 > this.pipes_[0].pipe_.botY))) {
             this.gameOver()
 
         }
@@ -178,24 +178,24 @@ class Bird extends GameObject {
     }
 
     display() {
-        stroke('black');
-        textSize(FONT_SIZE +1)
+        //stroke('black');
+        //textSize(FONT_SIZE +1)
 
-        text(this.display_, this.position_.x+ FONT_SIZE/20, this.position_.y+ FONT_SIZE/20)
+        //text(this.display_, this.position_.x+ FONT_SIZE/20, this.position_.y+ FONT_SIZE/20)
+
+
+
+        fill('black');
+        
+        textSize(FONT_SIZE)
+
+        text(this.display_, this.position_.x, this.position_.y)
 
 
         let currentColor = colors[frameCount % numColors];
         textSize(FONT_SIZE)
         fill(currentColor)
-        text(this.display_, this.position_.x + FONT_SIZE/20, this.position_.y + FONT_SIZE/20)
-
-        fill('black');
-        
-        textSize(FONT_SIZE -1)
-
-        text(this.display_, this.position_.x, this.position_.y)
-
-
+        text(this.display_, this.position_.x - FONT_SIZE/20, this.position_.y - FONT_SIZE/20)
 
     }
 
