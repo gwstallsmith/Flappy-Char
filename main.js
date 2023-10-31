@@ -12,20 +12,21 @@ let numColors = 360
 
 class GameManager {
     constructor() { 
-        this.pipes_ = [];
+        this.pipes_ = []
         this.pipes_.push(new Pipe)
 
         this.bird_ = new Bird
 
-        this.score_ = 0;
+        this.score_ = 0
+        this.playing_ = false
 
-        this.playing_ = false;
     }
+
 
     getPlaying() { return this.playing_ }
 
-    start() { this.playing_ = true; }
-    stop() { this.playing_ = false; }
+    start() { this.playing_ = true }
+    stop() { this.playing_ = false }
 
     getBird() { return this.bird_ }
 
@@ -42,29 +43,44 @@ class GameManager {
     }
 
     render() {
-        if(this.playing_) {
+
+        if(!this.playing_) {
+            this.displayMenu()
+        } else {
+            
             this.pipes_[0].display()
             this.pipes_[0].update()
 
 
             this.displayScore()
 
-            this.bird_.display();
-            this.bird_.update();
-            this.checkCollision()
-
-        } else {
-            textSize(28)
-            text("Press space to start\n\t\tOr tap to start", CANVAS_WIDTH/8, CANVAS_HEIGHT/10)
-            textSize(FONT_SIZE)
-            this.bird_.display() 
-            this.pipes_[0].display()
+            this.bird_.display()
+            this.bird_.update()
+             this.checkCollision()
 
         }
     }
 
-    displayScore() {
+    displayMenu() {
+        this.bird_.display() 
+        this.pipes_[0].display()
 
+        fill('white')
+        rect(CANVAS_WIDTH/4, CANVAS_HEIGHT/10, CANVAS_WIDTH*1/2, CANVAS_HEIGHT*4/5)
+
+        stroke('white')
+        fill('black')
+        strokeWeight(FONT_SIZE/20)
+        text("Tap to start", CANVAS_WIDTH/2, CANVAS_HEIGHT/10  + FONT_SIZE)
+        textSize(FONT_SIZE)
+
+
+
+    }
+
+    displayScore() {
+        let LOCAL_FS = 64
+        textSize(LOCAL_FS)
 
         let digits = this.score_
         let accum = 1
@@ -73,18 +89,18 @@ class GameManager {
             digits = digits % 10;
             accum++
         }
-        stroke('black')
-        fill('white')
 
-        rect(CANVAS_WIDTH/2 - FONT_SIZE*accum, CANVAS_HEIGHT/10 - FONT_SIZE*7/8, FONT_SIZE*accum*3/2, FONT_SIZE)
-        fill('black')
-        text(this.score_, CANVAS_WIDTH/2 - FONT_SIZE/2*accum, CANVAS_HEIGHT/10)
+        stroke('black')
+        strokeWeight(LOCAL_FS/20)
+        fill('white')
+        text(this.score_, CANVAS_WIDTH/2, CANVAS_HEIGHT/10)
+        strokeWeight(1)
+
     }
 
     checkCollision() {
-
-        if(((this.pipes_[0].getPos().x < CANVAS_WIDTH / 6 + FONT_SIZE) && !(this.pipes_[0].getPos().x < CANVAS_WIDTH / 6 - this.pipes_[0].pipe_.width))
-        && ((this.bird_.getPos().y - FONT_SIZE/2 < this.pipes_[0].pipe_.topHeight) || (this.bird_.getPos().y + FONT_SIZE/8 > this.pipes_[0].pipe_.botY))) {
+        if(((this.pipes_[0].getPos().x < CANVAS_WIDTH / 6 + FONT_SIZE/2) && !(this.pipes_[0].getPos().x < CANVAS_WIDTH / 6 - this.pipes_[0].pipe_.width))
+        && ((this.bird_.getPos().y - FONT_SIZE/2 < this.pipes_[0].pipe_.topHeight) || (this.bird_.getPos().y + FONT_SIZE/2 > this.pipes_[0].pipe_.botY))) {
             this.gameOver()
 
         }
@@ -178,12 +194,6 @@ class Bird extends GameObject {
     }
 
     display() {
-        //stroke('black');
-        //textSize(FONT_SIZE +1)
-
-        //text(this.display_, this.position_.x+ FONT_SIZE/20, this.position_.y+ FONT_SIZE/20)
-
-
 
         fill('black');
         
@@ -234,6 +244,9 @@ function setup() {
 
     textSize(FONT_SIZE)
     textLeading(FONT_SIZE);
+    textAlign(CENTER)
+
+
 
     GameMan = new GameManager()
     bird = new Bird()
