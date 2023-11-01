@@ -17,6 +17,8 @@ class GameManager {
 
         this.bird_ = new Bird
 
+        this.background_ = new Background
+
         this.score_ = 0
         this.playing_ = false
 
@@ -43,6 +45,8 @@ class GameManager {
     }
 
     render() {
+        this.background_.display()
+        this.background_.update()
 
         if(!this.playing_) {
             this.displayMenu()
@@ -56,20 +60,17 @@ class GameManager {
 
             this.bird_.display()
             this.bird_.update()
-            // this.checkCollision()
             this.checkCollision(this.pipes_[0], this.bird_)
         }
     }
 
+
     displayMenu() {
         this.pipes_[0].display()
-        strokeWeight(1)
-        fill('rgba(255,255,255,0.9)')
-        rect(CANVAS_WIDTH/5, CANVAS_HEIGHT/10, CANVAS_WIDTH*3/5, CANVAS_HEIGHT*4/5)
-
-        stroke('white')
-        fill('black')
-        text("Tap to start", CANVAS_WIDTH/2, CANVAS_HEIGHT/10  + FONT_SIZE)
+        stroke('black')
+        strokeWeight(3)
+        fill('white')
+        text("Tap to start", CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
         textSize(FONT_SIZE)
         strokeWeight(1)
         stroke('black')
@@ -153,6 +154,36 @@ class GameObject {
 
 
 }
+
+class Background extends GameObject {
+    constructor() {
+        super()
+
+        this.display_ = '/'
+    }
+
+    display() {
+        let curveHeight = CANVAS_HEIGHT/2 - (FONT_SIZE * Math.sin(frameCount/(Math.PI*12)))
+
+        fill('grey')
+        strokeWeight(0)
+
+
+        for(let i = 0; i < CANVAS_WIDTH + FONT_SIZE; i += FONT_SIZE/2) {
+            for(let j = CANVAS_HEIGHT/2; j < CANVAS_HEIGHT; j += FONT_SIZE/2) {
+                text(this.display_, i, curveHeight +j)
+            }
+        }
+
+
+    }
+
+    update() {
+
+    }
+
+}
+
 
 class Pipe extends GameObject {
     constructor() {
@@ -253,6 +284,7 @@ let canvas
 let bird
 let GameMan
 let pipe
+let frameCount
 
 
 function setup() {
@@ -265,7 +297,7 @@ function setup() {
     textLeading(FONT_SIZE);
     textAlign(CENTER)
 
-
+    frameCount = 0;
 
     GameMan = new GameManager()
     bird = new Bird()
@@ -325,8 +357,9 @@ function draw() {
     stroke('black')
 
     GameMan.render();
-
-
+    if(GameMan.getPlaying()) {
+        frameCount++
+    }
 
 }
 
