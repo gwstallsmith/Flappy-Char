@@ -82,17 +82,17 @@ class GameManager {
         let LOCAL_FS = 64
         textSize(LOCAL_FS)
 
-        let digits = this.score_
-        let accum = 1
-
-        while(digits > 9) {
-            digits = digits % 10;
-            accum++
-        }
 
         stroke('black')
         strokeWeight(LOCAL_FS/20)
-        fill('white')
+
+        if(this.score_ >= 10) {
+            let currentColor = colors[frameCount % numColors];
+            fill(currentColor)
+        } else {
+            fill('white')
+        }
+
         text(this.score_, CANVAS_WIDTH/2, CANVAS_HEIGHT/10)
         strokeWeight(1)
 
