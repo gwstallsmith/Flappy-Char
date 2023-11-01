@@ -56,24 +56,24 @@ class GameManager {
 
             this.bird_.display()
             this.bird_.update()
-             this.checkCollision()
-
+            // this.checkCollision()
+            this.checkCollision(this.pipes_[0], this.bird_)
         }
     }
 
     displayMenu() {
-        this.bird_.display() 
         this.pipes_[0].display()
-
-        fill('white')
-        rect(CANVAS_WIDTH/4, CANVAS_HEIGHT/10, CANVAS_WIDTH*1/2, CANVAS_HEIGHT*4/5)
+        strokeWeight(1)
+        fill('rgba(255,255,255,0.9)')
+        rect(CANVAS_WIDTH/5, CANVAS_HEIGHT/10, CANVAS_WIDTH*3/5, CANVAS_HEIGHT*4/5)
 
         stroke('white')
         fill('black')
-        strokeWeight(FONT_SIZE/20)
         text("Tap to start", CANVAS_WIDTH/2, CANVAS_HEIGHT/10  + FONT_SIZE)
         textSize(FONT_SIZE)
-
+        strokeWeight(1)
+        stroke('black')
+        this.bird_.display() 
 
 
     }
@@ -106,6 +106,22 @@ class GameManager {
         }
     }
 
+    checkCollision(pipe, bird) {
+
+        // if bird and pipe can even touch
+        if((pipe.getPos().x - bird.getPos().x - FONT_SIZE/2) < 0 && (pipe.getPos().x + pipe.pipe_.width > bird.getPos().x)) {
+            // if bird hit top pipe
+            if((pipe.pipe_.topHeight - bird.getPos().y + FONT_SIZE*3/4) > 0) {
+                this.gameOver()                
+            }
+            // if bird hit bottom pipe
+            if((pipe.pipe_.botY - bird.getPos().y - FONT_SIZE*1/4) < 0) {
+                this.gameOver()     
+            }
+
+        }
+    }
+
     gameOver() {
         this.stop()
 
@@ -134,6 +150,7 @@ class GameObject {
         fill('black');
         text(this.display_, this.position_.x, this.position_.y)
     }
+
 
 }
 
@@ -198,6 +215,8 @@ class Bird extends GameObject {
         fill('black');
         
         textSize(FONT_SIZE)
+
+        //rect(this.position_.x - FONT_SIZE/2, this.position_.y - FONT_SIZE*3/4, 50, 50)
 
         text(this.display_, this.position_.x, this.position_.y)
 
@@ -285,6 +304,11 @@ function keyPressed() {
  
 function mouseReleased() {
     if(!GameMan.getPlaying()) {
+
+        // Logic for where we're clicking
+
+
+
         let TempMan = new GameManager
         GameMan = TempMan    
     }

@@ -4,9 +4,6 @@
     box-sizing: border-box;
 
     touch-action:manipulation;
-    
+    background-color:rgb(0,0,0);
 }
 
-body {
-    background-color:rgb(20,20,20);
-}
