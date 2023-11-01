@@ -45,8 +45,8 @@ class GameManager {
     }
 
     render() {
-        this.background_.display()
-        this.background_.update()
+        //this.background_.display()
+        //this.background_.update()
 
         if(!this.playing_) {
             this.displayMenu()
