@@ -13,7 +13,8 @@ let numColors = 360
 class GameManager {
     constructor() { 
         this.pipes_ = []
-        this.pipes_.push(new Pipe)
+        this.pipes_.push(new Pipe)        
+
 
         this.bird_ = new Bird
 
@@ -36,11 +37,11 @@ class GameManager {
 
     addPoint() { this.score_++ }
 
-    enqueue(pipe)   {
+    enqueuePipe(pipe)   {
         this.pipes_.push(pipe);
     }
 
-    dequeue(pipe) { 
+    dequeuePipe(pipe) { 
         this.pipes_.splice(this.pipes_.indexOf(pipe), 1)
     }
 
@@ -227,8 +228,8 @@ class Pipe extends GameObject {
     
         if (this.position_.x < -this.pipe_.width) {
             this.position_.x = CANVAS_WIDTH // pop off pipe stack in manager
-            GameMan.enqueue(new Pipe)
-            GameMan.dequeue(this)
+            GameMan.enqueuePipe(new Pipe)
+            GameMan.dequeuePipe(this)
             GameMan.addPoint()
         }
     }
