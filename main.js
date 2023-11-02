@@ -46,7 +46,7 @@ class GameManager {
     }
 
     render() {
-        this.background_.display()
+        //this.background_.display()
 
         if(!this.playing_) {
             this.displayMenu()
@@ -67,11 +67,14 @@ class GameManager {
 
 
     displayMenu() {
+        
         this.pipes_[0].display()
         stroke('black')
         strokeWeight(3)
         fill('white')
         text("Tap to start", CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
+        this.displayScore()
+
         textSize(FONT_SIZE)
         strokeWeight(1)
         stroke('black')
@@ -98,14 +101,6 @@ class GameManager {
         text(this.score_, CANVAS_WIDTH/2, CANVAS_HEIGHT/10)
         strokeWeight(1)
 
-    }
-
-    checkCollision() {
-        if(((this.pipes_[0].getPos().x < CANVAS_WIDTH / 6 + FONT_SIZE/2) && !(this.pipes_[0].getPos().x < CANVAS_WIDTH / 6 - this.pipes_[0].pipe_.width))
-        && ((this.bird_.getPos().y - FONT_SIZE/2 < this.pipes_[0].pipe_.topHeight) || (this.bird_.getPos().y + FONT_SIZE/2 > this.pipes_[0].pipe_.botY))) {
-            this.gameOver()
-
-        }
     }
 
     checkCollision(pipe, bird) {
