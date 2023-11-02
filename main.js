@@ -45,13 +45,13 @@ class GameManager {
     }
 
     render() {
-        //this.background_.display()
-        //this.background_.update()
+        this.background_.display()
 
         if(!this.playing_) {
             this.displayMenu()
         } else {
-            
+            this.background_.update()
+
             this.pipes_[0].display()
             this.pipes_[0].update()
 
@@ -167,19 +167,23 @@ class Background extends GameObject {
 
         fill('grey')
         strokeWeight(0)
+        text(this.display_, this.position_.x, curveHeight)
 
-
-        for(let i = 0; i < CANVAS_WIDTH + FONT_SIZE; i += FONT_SIZE/2) {
-            for(let j = CANVAS_HEIGHT/2; j < CANVAS_HEIGHT; j += FONT_SIZE/2) {
-                text(this.display_, i, curveHeight +j)
-            }
-        }
+        //for(let i = 0; i < CANVAS_WIDTH + FONT_SIZE; i += FONT_SIZE/2) {
+        //    for(let j = CANVAS_HEIGHT/2; j < CANVAS_HEIGHT; j += FONT_SIZE/2) {
+        //        text(this.display_, i, curveHeight +j)
+        //    }
+        //}
 
 
     }
 
     update() {
+        this.position_.add(backgroundVelocity)
 
+        if(this.position_.x < 0) {
+            this.position_.x = CANVAS_WIDTH
+        }
     }
 
 }
@@ -317,6 +321,7 @@ function preload() {
     gravity = createVector(0, 0.5); // Define gravity as a vector.
     birdVelocity = createVector(0, 0); // Initialize velocity vector.
     pipeVelocity = createVector(-4, 0);
+    backgroundVelocity = createVector(-2, 0);
 
 }
 
