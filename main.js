@@ -71,6 +71,7 @@ class GameManager {
         strokeWeight(3)
         fill('white')
         text("Tap to start", CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
+        strokeWeight(0)
 
     }
 
@@ -97,7 +98,8 @@ class GameManager {
     checkCollision(pipe, bird) {
 
         // if bird and pipe can even touch
-        if((pipe.getPos().x - bird.getPos().x - FONT_SIZE/2) < 0 && (pipe.getPos().x + pipe.pipe_.width > bird.getPos().x)) {
+        if((pipe.getPos().x - bird.getPos().x - FONT_SIZE/2) < 0 && (pipe.getPos().x + pipe.pipe_.width > bird.getPos().x)) {    
+
             // if bird hit top pipe
             if((pipe.pipe_.topHeight - bird.getPos().y + FONT_SIZE*3/4) > 0) {
                 this.gameOver()                
@@ -211,13 +213,23 @@ class Pipe extends GameObject {
         triangle(this.position_.x, this.pipe_.botY,
                  this.position_.x + shadowDepth, this.pipe_.botY,
                  this.position_.x + shadowDepth, this.pipe_.botY - shadowDepth);
-        
-        
+
+        strokeWeight(1)
+        fill('rbga(100,100,100,0.5)')
+        rect(0, CANVAS_HEIGHT - FONT_SIZE, CANVAS_WIDTH, FONT_SIZE)
+
+        fill('grey')
+
+        triangle(this.position_.x + this.pipe_.width,  CANVAS_HEIGHT,
+                 this.position_.x + this.pipe_.width, CANVAS_HEIGHT - FONT_SIZE,
+                 this.position_.x + this.pipe_.width + shadowDepth, CANVAS_HEIGHT - FONT_SIZE
+                )
+
+        strokeWeight(0)
         fill(0,0,0)
         stroke('black')
         rect(this.position_.x, this.pipe_.topY, this.pipe_.width, this.pipe_.topHeight)
         rect(this.position_.x, this.pipe_.botY, this.pipe_.width, this.pipe_.botHeight)
-
 
 
         
@@ -247,13 +259,20 @@ class Bird extends GameObject {
         this.display_ = '@'
     }
 
+    
+
     display() {
+        fill('rgba(0,0,0,0.5)')
+        strokeWeight(0)
+
+        circle(this.position_.x, CANVAS_HEIGHT - FONT_SIZE/2, (FONT_SIZE/10 * (CANVAS_HEIGHT/(CANVAS_HEIGHT-this.position_.y))) > FONT_SIZE ? FONT_SIZE : (FONT_SIZE/10 * (CANVAS_HEIGHT/(CANVAS_HEIGHT-this.position_.y))))
 
         fill('black');
+
+        strokeWeight(0.5)
         
         textSize(FONT_SIZE)
 
-        //rect(this.position_.x - FONT_SIZE/2, this.position_.y - FONT_SIZE*3/4, 50, 50)
 
         text(this.display_, this.position_.x, this.position_.y)
 
@@ -272,7 +291,7 @@ class Bird extends GameObject {
         this.position_.add(birdVelocity) // Update bird's position based on velocity.
     
 
-        if (this.position_.y > CANVAS_HEIGHT) {
+        if (this.position_.y > CANVAS_HEIGHT - FONT_SIZE/2) {
           GameMan.gameOver()
         }
       }
