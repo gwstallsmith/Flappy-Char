@@ -70,7 +70,7 @@ class GameManager {
         stroke('black')
         strokeWeight(3)
         fill('white')
-        text("Tap to start", CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
+        text("Press Space to start", CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
         strokeWeight(0)
 
     }
