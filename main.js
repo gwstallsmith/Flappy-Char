@@ -47,19 +47,19 @@ class GameManager {
 
     render() {
         //this.background_.display()
+        this.pipes_[0].display()
+        this.displayScore()
+        this.bird_.display()
 
         if(!this.playing_) {
             this.displayMenu()
         } else {
-            this.background_.update()
+            //this.background_.update()
 
-            this.pipes_[0].display()
             this.pipes_[0].update()
 
 
-            this.displayScore()
 
-            this.bird_.display()
             this.bird_.update()
             this.checkCollision(this.pipes_[0], this.bird_)
         }
@@ -67,19 +67,10 @@ class GameManager {
 
 
     displayMenu() {
-        
-        this.pipes_[0].display()
         stroke('black')
         strokeWeight(3)
         fill('white')
         text("Tap to start", CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
-        this.displayScore()
-
-        textSize(FONT_SIZE)
-        strokeWeight(1)
-        stroke('black')
-        this.bird_.display() 
-
 
     }
 
@@ -155,30 +146,27 @@ class Background extends GameObject {
     constructor() {
         super()
 
-        this.display_ = '/'
+        this.display_ = '|'
     }
 
     display() {
-        let curveHeight = CANVAS_HEIGHT/2 - (FONT_SIZE * Math.sin(frameCount/(Math.PI*12)))
 
-        fill('grey')
+        fill('rgba(0,0,0,0.2)')
         strokeWeight(0)
-        text(this.display_, this.position_.x, curveHeight)
 
-        //for(let i = 0; i < CANVAS_WIDTH + FONT_SIZE; i += FONT_SIZE/2) {
-        //    for(let j = CANVAS_HEIGHT/2; j < CANVAS_HEIGHT; j += FONT_SIZE/2) {
-        //        text(this.display_, i, curveHeight +j)
-        //    }
-        //}
-
+        for(let i = 0; i < CANVAS_WIDTH*2; i += FONT_SIZE/4) {
+            for(let j = CANVAS_HEIGHT - CANVAS_HEIGHT/3; j < CANVAS_HEIGHT + 2*FONT_SIZE; j += FONT_SIZE) {
+                text(this.display_, this.position_.x + i, j + FONT_SIZE * Math.sin((i)/Math.PI/50))            
+            }
+        }
 
     }
 
     update() {
         this.position_.add(backgroundVelocity)
 
-        if(this.position_.x < 0) {
-            this.position_.x = CANVAS_WIDTH
+        if(this.position_.x < -CANVAS_WIDTH) {
+            this.position_.x = 0
         }
     }
 
@@ -210,10 +198,28 @@ class Pipe extends GameObject {
 
 
     display() {
+        let shadowDepth = FONT_SIZE/4;
+        fill('grey')
+        stroke('grey')
+
+        rect(this.position_.x + shadowDepth, this.pipe_.topY, this.pipe_.width, this.pipe_.topHeight - shadowDepth)
+        triangle(this.position_.x + this.pipe_.width, this.pipe_.topHeight,
+                 this.position_.x + this.pipe_.width, this.pipe_.topHeight - shadowDepth,
+                 this.position_.x + this.pipe_.width + shadowDepth, this.pipe_.topHeight - shadowDepth)
+
+        rect(this.position_.x + shadowDepth, this.pipe_.botY - shadowDepth, this.pipe_.width, this.pipe_.botHeight)
+        triangle(this.position_.x, this.pipe_.botY,
+                 this.position_.x + shadowDepth, this.pipe_.botY,
+                 this.position_.x + shadowDepth, this.pipe_.botY - shadowDepth);
+        
+        
         fill(0,0,0)
         stroke('black')
         rect(this.position_.x, this.pipe_.topY, this.pipe_.width, this.pipe_.topHeight)
         rect(this.position_.x, this.pipe_.botY, this.pipe_.width, this.pipe_.botHeight)
+
+
+
         
     }
 
@@ -317,7 +323,7 @@ function preload() {
     gravity = createVector(0, 0.5); // Define gravity as a vector.
     birdVelocity = createVector(0, 0); // Initialize velocity vector.
     pipeVelocity = createVector(-4, 0);
-    backgroundVelocity = createVector(-2, 0);
+    backgroundVelocity = createVector(-1, 0);
 
 }
 
