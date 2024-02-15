@@ -218,18 +218,24 @@ class Pipe extends GameObject {
         fill('rbga(100,100,100,0.5)')
         rect(0, CANVAS_HEIGHT - FONT_SIZE, CANVAS_WIDTH, FONT_SIZE)
 
-        fill('grey')
 
-        triangle(this.position_.x + this.pipe_.width,  CANVAS_HEIGHT,
-                 this.position_.x + this.pipe_.width, CANVAS_HEIGHT - FONT_SIZE,
-                 this.position_.x + this.pipe_.width + shadowDepth, CANVAS_HEIGHT - FONT_SIZE
-                )
+        if(this.pipe_.botY <  CANVAS_HEIGHT - FONT_SIZE) {
+            fill('grey')
 
+            triangle(this.position_.x + this.pipe_.width,  CANVAS_HEIGHT,
+                     this.position_.x + this.pipe_.width, CANVAS_HEIGHT - FONT_SIZE,
+                     this.position_.x + this.pipe_.width + shadowDepth, CANVAS_HEIGHT - FONT_SIZE
+                    )
+            strokeWeight(0)
+            fill('black')
+            stroke('black')
+            rect(this.position_.x, this.pipe_.botY, this.pipe_.width, this.pipe_.botHeight)
+
+        }
         strokeWeight(0)
-        fill(0,0,0)
+        fill('black')
         stroke('black')
         rect(this.position_.x, this.pipe_.topY, this.pipe_.width, this.pipe_.topHeight)
-        rect(this.position_.x, this.pipe_.botY, this.pipe_.width, this.pipe_.botHeight)
 
 
         
